@@ -116,7 +116,7 @@ class QueryBuilder
 
     public function lists($value, $key)
     {
-        return $this->query->lists($value, $key);
+        return $this->query->pluck($value, $key);
     }
 
     protected function prepare()
