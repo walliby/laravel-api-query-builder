@@ -40,6 +40,10 @@ class QueryBuilder
 
     protected $appends = [];
 
+    protected $result_format = [];
+
+    protected $list_values = [];
+
     protected $query;
 
     protected $result;
@@ -85,7 +89,15 @@ class QueryBuilder
 
         $this->query->select($this->columns);
 
-        return $this;
+        switch ($this->result_format) {
+            case 'paginate':
+                return $this->paginate();
+                break;
+            case 'list':
+                return $this->lists($this->list_values[1], $this->list_values[0]);
+            default:
+                return $this->get();
+        }
     }
 
     public function get()
@@ -253,6 +265,13 @@ class QueryBuilder
     private function setAppends($appends)
     {
         $this->appends = explode(',', $appends);
+    }
+
+    private function setResultFormat($result_format)
+    {
+        $format = array_filter(explode('|', $result_format));
+        $this->list_values = $format[0] == 'list' ? array_filter(explode(',', $format[1])) : '';
+        $this->result_format = $format[0];
     }
 
     private function addWhereToQuery($where)
