@@ -100,7 +100,7 @@ class QueryBuilder
         }
     }
 
-    public function get()
+    private function get()
     {
         $result = $this->query->get();
 
@@ -111,7 +111,7 @@ class QueryBuilder
         return $result;
     }
 
-    public function paginate()
+    private function paginate()
     {
         if (!$this->hasLimit()) {
             throw new Exception("You can't use unlimited option for pagination", 1);
@@ -126,7 +126,7 @@ class QueryBuilder
         return $result;
     }
 
-    public function lists($value, $key)
+    private function lists($value, $key)
     {
         return $this->query->pluck($value, $key);
     }
