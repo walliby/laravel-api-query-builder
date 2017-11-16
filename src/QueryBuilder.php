@@ -63,9 +63,9 @@ class QueryBuilder
         $this->query = $this->model->newQuery();
     }
 
-    public function get()
+    public function get($id = null)
     {
-        $this->build();
+        $this->build($id);
 
         switch ($this->result_format) {
             case 'paginate':
@@ -83,9 +83,13 @@ class QueryBuilder
         return $response;
     }
 
-    private function build()
+    private function build($id)
     {
         $this->prepare();
+
+        if (isset($id)) {
+            $this->query->where('id', '=', $id);
+        }
 
         if ($this->hasWheres()) {
             array_map([$this, 'addWhereToQuery'], $this->wheres);
