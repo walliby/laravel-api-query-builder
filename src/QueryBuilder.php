@@ -63,7 +63,27 @@ class QueryBuilder
         $this->query = $this->model->newQuery();
     }
 
-    public function build()
+    public function get()
+    {
+        $this->build();
+
+        switch ($this->result_format) {
+            case 'paginate':
+                $response = $this->paginate()->toArray();
+                break;
+            case 'list':
+                $response['data'] = $this->lists($this->list_values[1], $this->list_values[0])->toArray();
+                break;
+            default:
+                $response['data'] = $this->all()->toArray();
+        }
+
+        $response['message'] = '';
+        $response['status'] = 'success';
+        return $response;
+    }
+
+    private function build()
     {
         $this->prepare();
 
@@ -88,19 +108,9 @@ class QueryBuilder
         $this->query->with($this->includes);
 
         $this->query->select($this->columns);
-
-        switch ($this->result_format) {
-            case 'paginate':
-                return $this->paginate();
-                break;
-            case 'list':
-                return $this->lists($this->list_values[1], $this->list_values[0]);
-            default:
-                return $this->get();
-        }
     }
 
-    private function get()
+    private function all()
     {
         $result = $this->query->get();
 
